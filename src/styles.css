@@ -1,0 +1,28 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@import 'react-day-picker/dist/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  @apply flex flex-col flex-nowrap inset-0 absolute;
+  --toastify-icon-color-error: #e11d48;
+  --toastify-color-progress-error: #e11d48;
+}
+
+.rdp {
+  --rdp-cell-size: 40px; /* Size of the day cells. */
+  --rdp-caption-font-size: 18px; /* Font size for the caption labels. */
+  --rdp-accent-color: #ec4899; /* Accent color for the background of selected days. */
+  --rdp-background-color: #fce7f3; /* Background color for the hovered/focused elements. */
+  --rdp-accent-color-dark: #ec4899; /* Accent color for the background of selected days (to use in dark-mode). */
+  --rdp-background-color-dark: #500724; /* Background color for the hovered/focused elements (to use in dark-mode). */
+  --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
+  --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
+  --rdp-selected-color: #fff; /* Color of selected day text */
+}
+
+.text-shadow {
+  text-shadow: 2px 3px 1px rgba(0, 0, 0, 0.25);
+}
