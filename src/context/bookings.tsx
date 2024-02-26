@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 export type Booking = {
@@ -27,8 +27,26 @@ export const BookingsContext = createContext<BookingsContextType>(
   {} as BookingsContextType,
 );
 
+const LOCAL_STORAGE_KEY = "bookings";
+
+const setBookingsToLocalStorage = (bookings: Booking[]) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(bookings));
+};
+
+const getBookingsFromLocalStorage = (): Booking[] => {
+  const bookings = localStorage.getItem(LOCAL_STORAGE_KEY);
+  return bookings
+    ? JSON.parse(bookings)
+    : PATIAL_BOOKINGS.map((booking) => {
+        const id = uuid();
+        const imageUrl = `https://picsum.photos/680/480?${id}`;
+        return { ...booking, id, imageUrl };
+      });
+};
+
 export function BookingsProvider({ children }: PropsWithChildren) {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const storedBookings = getBookingsFromLocalStorage();
+  const [bookings, setBookings] = useState<Booking[]>(storedBookings);
 
   const addBooking = (newBooking: NewBooking) => {
     const id = uuid();
@@ -48,15 +66,9 @@ export function BookingsProvider({ children }: PropsWithChildren) {
     setBookings(() => updatedBookings);
   };
 
-  useEffect(() => {
-    const mockBookings = PATIAL_BOOKINGS.map((booking) => {
-      const id = uuid();
-      const imageUrl = `https://picsum.photos/680/480?${id}`;
-      return { ...booking, id, imageUrl };
-    });
-
-    setBookings(() => mockBookings);
-  }, []);
+  onbeforeunload = () => {
+    setBookingsToLocalStorage(bookings);
+  };
 
   return (
     <BookingsContext.Provider

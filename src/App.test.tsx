@@ -5,7 +5,10 @@ import { toast } from "react-toastify";
 import App from "@/App";
 
 jest.useFakeTimers();
+
 jest.spyOn(global, "setTimeout");
+jest.spyOn(Storage.prototype, "setItem");
+
 jest.mock("react-toastify");
 jest.mock("uuid", () => {
   const uuid = jest.requireActual("uuid");
@@ -21,8 +24,13 @@ describe("App", () => {
     wrapper = render(<App />);
   });
 
-  it("renders without crashing", () => {
+  it("should render without crashing", () => {
     expect(wrapper).toBeDefined();
+  });
+
+  it("should store items on `localStorage` before leave the window", () => {
+    window.dispatchEvent(new Event("beforeunload"));
+    expect(localStorage.setItem).toHaveBeenCalledTimes(1);
   });
 
   it("should create a booking and update", async () => {

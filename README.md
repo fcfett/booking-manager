@@ -22,3 +22,8 @@ pnpm dev
 ```
 
 Open [http://localhost:5173/](http://localhost:5173/) in your favorite browser to try it.
+
+<br/>
+
+> [!NOTE]
+> This project uses [ESLint](https://eslint.org/) as default formatter/linter. You may have to change your configurations to run it properly.
