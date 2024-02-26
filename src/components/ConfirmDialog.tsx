@@ -13,13 +13,13 @@ type Props = {
 } & ReactModalProps;
 
 export default function ConfirmDialog({
+  title,
   isOpen,
+  message,
+  className,
   onDecline,
   onConfirm,
-  title,
-  message,
-  overlayClassName = "",
-  className = "",
+  overlayClassName,
   ...props
 }: Props) {
   return (

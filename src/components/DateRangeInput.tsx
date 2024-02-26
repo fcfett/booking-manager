@@ -1,5 +1,5 @@
 import { CalendarIcon } from "@heroicons/react/24/outline";
-import { format, isAfter, isBefore, startOfDay } from "date-fns";
+import { format, isBefore, startOfDay } from "date-fns";
 import { useEffect, useState } from "react";
 import {
   DateRange,
@@ -10,18 +10,13 @@ import style from "react-day-picker/dist/style.module.css";
 import { twMerge } from "tailwind-merge";
 import twColors from "tailwindcss/colors";
 
+import { rangeIncludeRanges } from "@/utils";
+
 type Props = {
   disabledRanges?: DateRange[];
   defaultSelected?: DateRange;
   disablePastDays?: boolean;
 };
-
-const rangeIncludeRanges = (range: DateRange, ranges: DateRange[]) =>
-  range.from &&
-  range.to &&
-  ranges.some(
-    ({ from, to }) => isBefore(range.from!, from!) && isAfter(range.to!, to!),
-  );
 
 export default function DateRangeInput({
   defaultSelected,
@@ -74,8 +69,8 @@ export default function DateRangeInput({
           <strong className="font-bold">{toString}</strong>
         </span>
         <CalendarIcon className="absolute right-2 h-5 w-5 stroke-[2px] text-gray-400" />
-        <input readOnly type="hidden" name="to-date" value={toValue} />
-        <input readOnly type="hidden" name="from-date" value={fromValue} />
+        <input readOnly type="hidden" name="to" value={toValue} />
+        <input readOnly type="hidden" name="from" value={fromValue} />
       </output>
 
       <DayPicker

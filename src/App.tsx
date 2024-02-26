@@ -2,14 +2,14 @@ import "./styles.css";
 
 import { ToastContainer } from "react-toastify";
 
-import { AppProvider } from "./context";
+import { BookingsProvider } from "./context/bookings";
 import Home from "./pages/Home";
 
 export default function App() {
   return (
-    <AppProvider>
+    <BookingsProvider>
       <Home />
       <ToastContainer />
-    </AppProvider>
+    </BookingsProvider>
   );
 }

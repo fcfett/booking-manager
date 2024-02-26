@@ -3,15 +3,15 @@ import { v4 as uuid } from "uuid";
 
 export type Booking = {
   id: string;
+  to: string;
+  from: string;
   name: string;
   imageUrl: string;
-  from: string;
-  to: string;
 };
 
 export type NewBooking = Omit<Booking, "id" | "imageUrl">;
 
-type AppContextType = {
+type BookingsContextType = {
   bookings: Booking[];
   updateBooking: (booking: Booking) => void;
   removeBooking: (id: Booking["id"]) => void;
@@ -19,13 +19,15 @@ type AppContextType = {
 };
 
 const PATIAL_BOOKINGS: NewBooking[] = [
-  { name: "Brazilian's Carnival", from: "2024-02-09", to: "2024-02-24" },
-  { name: "Diving in the Bahamas", from: "2024-03-10", to: "2024-03-17" },
+  { name: "Brazilian's Carnival", from: "2024-02-09", to: "2024-02-17" },
+  { name: "Diving in the Bahamas", from: "2024-03-14", to: "2024-03-21" },
 ];
 
-export const AppContext = createContext<AppContextType>({} as AppContextType);
+export const BookingsContext = createContext<BookingsContextType>(
+  {} as BookingsContextType,
+);
 
-export function AppProvider({ children }: PropsWithChildren) {
+export function BookingsProvider({ children }: PropsWithChildren) {
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   const addBooking = (newBooking: NewBooking) => {
@@ -57,10 +59,10 @@ export function AppProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <AppContext.Provider
+    <BookingsContext.Provider
       value={{ bookings, addBooking, updateBooking, removeBooking }}
     >
       {children}
-    </AppContext.Provider>
+    </BookingsContext.Provider>
   );
 }

@@ -2,21 +2,20 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { parse } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { useContext, useState } from "react";
+import { DateRange } from "react-day-picker";
 
 import BookingModal from "@/components/BookingModal";
 import BookingsList from "@/components/BookingsList";
 import BookingsPlaceholder from "@/components/BookingsPlaceholder";
 import Button from "@/components/Button";
-import { AppContext, Booking, NewBooking } from "@/context";
+import { Booking, BookingsContext, NewBooking } from "@/context/bookings";
 import MainTemplate from "@/templates/MainTemplate";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking>();
   const { bookings, addBooking, updateBooking, removeBooking } =
-    useContext(AppContext);
-
-  const bookingsCount = bookings.length;
+    useContext(BookingsContext);
 
   const openModalWith = (booking?: Booking) => {
     setIsModalOpen(() => true);
@@ -40,15 +39,23 @@ export default function Home() {
     closeModal();
   };
 
-  const disabledDates = bookings
-    .filter(({ id }) => selectedBooking?.id !== id)
-    .map(({ from, to }) => ({
-      from: parse(from, "yyyy-MM-dd", new Date(), { locale: enUS }),
-      to: parse(to, "yyyy-MM-dd", new Date(), { locale: enUS }),
-    }));
-
+  const bookingsCount = bookings.length;
   const sortedBookings = bookings.sort(
     (a, b) => new Date(a.from).getTime() - new Date(b.from).getTime(),
+  );
+
+  const disabledDates = bookings.reduce(
+    (arr: DateRange[], { id, from, to }) =>
+      id !== selectedBooking?.id
+        ? [
+            ...arr,
+            {
+              from: parse(from, "yyyy-MM-dd", new Date(), { locale: enUS }),
+              to: parse(to, "yyyy-MM-dd", new Date(), { locale: enUS }),
+            },
+          ]
+        : arr,
+    [],
   );
 
   return (
@@ -61,7 +68,7 @@ export default function Home() {
               <strong className="text-primary">
                 {bookingsCount} trip{bookingsCount > 1 && "s"}
               </strong>{" "}
-              recorded.
+              registered.
             </span>
           )}
           <Button
@@ -73,7 +80,7 @@ export default function Home() {
           </Button>
         </section>
         {bookingsCount > 0 ? (
-          <BookingsList bookings={sortedBookings} onEditClick={openModalWith} />
+          <BookingsList bookings={sortedBookings} onEdit={openModalWith} />
         ) : (
           <BookingsPlaceholder onCtaClick={() => openModalWith()} />
         )}
@@ -84,8 +91,8 @@ export default function Home() {
         onSave={onModalSave}
         onClose={closeModal}
         onDelete={onModalDelete}
-        selectedBooking={selectedBooking}
         disabledDates={disabledDates}
+        selectedBooking={selectedBooking}
       />
     </>
   );

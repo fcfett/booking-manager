@@ -4,7 +4,7 @@ import { enUS } from "date-fns/locale";
 import { createRef, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Booking, NewBooking } from "@/context";
+import { Booking, NewBooking } from "@/context/bookings";
 
 import Button from "./Button";
 import ConfirmDialog from "./ConfirmDialog";
@@ -36,28 +36,15 @@ export default function BookingModal({
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    /* 
-    const formElements = e.currentTarget.elements;
-    const { name } = Object.fromEntries(
-      Array.from(formElements).map((el) => [
+    const { name, from, to } = Object.fromEntries(
+      Array.from(e.currentTarget.elements).map((el) => [
         (el as HTMLInputElement).name,
         (el as HTMLInputElement).value,
       ]),
     );
-     */
-
-    const formElements = e.currentTarget.elements;
-    const { value: name } = nameInputRef.current!;
-
-    const { value: from } = formElements.namedItem(
-      "from-date",
-    ) as HTMLInputElement;
-    const { value: to } = formElements.namedItem("to-date") as HTMLInputElement;
-
-    const newBooking = { ...selectedBooking, name, from, to };
 
     if (from && to) {
-      onSave(newBooking as Booking);
+      onSave({ ...selectedBooking, name, from, to });
       toast.success("Your booking has been saved!");
     } else {
       toast.error(
@@ -71,7 +58,7 @@ export default function BookingModal({
   };
 
   const onDeleteClick = () => {
-    selectedBooking && showConfirm(); //onDelete(selectedBooking.id);
+    selectedBooking && showConfirm();
   };
 
   const showConfirm = () => {
@@ -168,8 +155,8 @@ export default function BookingModal({
       <ConfirmDialog
         title="Are you sure?"
         onConfirm={onConfirm}
-        onDecline={closeConfirm}
         isOpen={isConfirmOpen}
+        onDecline={closeConfirm}
         message={
           <>
             Do you really want to{" "}
