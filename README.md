@@ -1,6 +1,8 @@
 # Booking Manager
 This project simulate a booking management experience. There are multiple UX features to provide a great experience and avoid overlapping dates.
 
+## Live Demo
+Here's the [live demo](https://fcfett.github.io/booking-manager/) of this project.
 
 ## Getting Started
 First, install all dependencies:
